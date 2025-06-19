@@ -279,10 +279,10 @@ if (empty($itemDetails)) {
     // Pass PHP cart items to JS
     const order = {
       Items: <?php
-        // Output as JS array of objects
         $jsItems = [];
         foreach ($itemDetails as $item) {
           $jsItems[] = [
+            'ItemID' => $item['item_id'],
             'ItemName' => $item['item_name'],
             'ItemPrice' => $item['price'],
             'ItemQuantity' => $item['quantity']

@@ -39,6 +39,25 @@ foreach ($orders_result as $row) {
         'items' => $items
     ];
 }
+
+// Handle order cancellation
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_order_id'])) {
+    $cancel_order_id = intval($_POST['cancel_order_id']);
+    // Only allow cancelling if the order belongs to the user and is pending
+    $check = $dbh->prepare("SELECT * FROM `order` WHERE order_id = ? AND customer_id = ? AND order_status = 'pending'");
+    $check->execute([$cancel_order_id, $customer_id]);
+    $order = $check->fetch(PDO::FETCH_ASSOC);
+    if ($order) {
+        // Insert into order_cancellation table (no customer_id column)
+        $insert = $dbh->prepare("INSERT INTO order_cancellation (order_id, cancellation_reason, cancellation_date) VALUES (?, ?, NOW())");
+        $insert->execute([$cancel_order_id, 'User cancelled']);
+        // Update the order status to cancelled
+        $update = $dbh->prepare("UPDATE `order` SET order_status = 'cancelled' WHERE order_id = ?");
+        $update->execute([$cancel_order_id]);
+        header("Location: track-order.php");
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -102,9 +121,27 @@ foreach ($orders_result as $row) {
             <th>Items</th>
             <th>Total</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
+        <?php foreach ($orders as $order): ?>
+          <?php if ($order['status'] === 'pending'): ?>
+            <tr>
+              <td><?= $order['id'] ?></td>
+              <td><?= $order['date'] ?></td>
+              <td><?php echo implode(', ', array_map(function($i){return $i['name'].' ×'.$i['quantity'];}, $order['items'])); ?></td>
+              <td>₱<?= number_format($order['total'], 2) ?></td>
+              <td><span class="status <?= $order['status'] ?>"><?= $order['status'] ?></span></td>
+              <td>
+                <form method="POST" style="display:inline;">
+                  <input type="hidden" name="cancel_order_id" value="<?= $order['id'] ?>">
+                  <button class="btn-cancel" type="submit" onclick="return confirm('Cancel this order?')">Cancel</button>
+                </form>
+              </td>
+            </tr>
+          <?php endif; ?>
+        <?php endforeach; ?>
         </tbody>
       </table>
     </div>
@@ -122,54 +159,41 @@ foreach ($orders_result as $row) {
           </tr>
         </thead>
         <tbody>
+        <?php foreach ($orders as $order): ?>
+          <?php if ($order['status'] === 'completed' || $order['status'] === 'cancelled'): ?>
+            <tr>
+              <td><?= $order['id'] ?></td>
+              <td><?= $order['date'] ?></td>
+              <td><?php echo implode(', ', array_map(function($i){return $i['name'].' ×'.$i['quantity'];}, $order['items'])); ?></td>
+              <td>₱<?= number_format($order['total'], 2) ?></td>
+              <td><span class="status <?= $order['status'] ?>"><?= $order['status'] ?></span></td>
+            </tr>
+          <?php endif; ?>
+        <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    const orders = <?php echo json_encode($orders); ?>;
-
-    const presentBody = document.querySelector("#present-orders tbody");
-    const pastBody = document.querySelector("#past-orders tbody");
-
-    function renderOrders() {
-      presentBody.innerHTML = "";
-      pastBody.innerHTML = "";
-
-      let hasPresent = false;
-      let hasPast = false;
-
-      orders.forEach(order => {
-        const row = document.createElement("tr");
-        const itemsText = order.items.map(i => `${i.name} ×${i.quantity}`).join(", ");
-
-        row.innerHTML = `
-          <td>${order.id}</td>
-          <td>${order.date}</td>
-          <td>${itemsText}</td>
-          <td>₱${order.total.toFixed(2)}</td>
-          <td><span class="status ${order.status}">${order.status}</span></td>
-        `;
-
-        if (order.status === "pending") {
-          presentBody.appendChild(row);
-          hasPresent = true;
-        } else {
-          pastBody.appendChild(row);
-          hasPast = true;
-        }
-      });
-
-      if (!hasPresent) {
-        presentBody.innerHTML = `<tr><td colspan="5" class="empty">No current orders.</td></tr>`;
-      }
-      if (!hasPast) {
-        pastBody.innerHTML = `<tr><td colspan="5" class="empty">No past orders.</td></tr>`;
-      }
-    }
-
-    renderOrders();
+    // REMOVE JS rendering so PHP Cancel button works
+    // const orders = <?php // echo json_encode($orders); ?>;
+    // const presentBody = document.querySelector("#present-orders tbody");
+    // const pastBody = document.querySelector("#past-orders tbody");
+    // function renderOrders() { ... }
+    // renderOrders();
   </script>
+
+  <style> 
+    button {
+        background: var(--primary);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+  </style>
 </body>
 </html>

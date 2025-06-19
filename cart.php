@@ -160,6 +160,19 @@ if (!empty($cart)) {
       margin: 0 2px;
       background: #f9f9f9;
     }
+    .checkout-btn {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: inline-block;
+      text-align: center;
+      margin-top: 1rem;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -178,7 +191,7 @@ if (!empty($cart)) {
 <div class="main">
   <h1>My Cart</h1>
 
-  <form action="payment.php" method="post">
+    <!-- Cart Table (no form wrapping the table) -->
     <table>
       <thead>
         <tr>
@@ -199,7 +212,9 @@ if (!empty($cart)) {
             <tr>
               <td><?= htmlspecialchars($item['item_name']) ?></td>
               <td>₱<?= number_format($item['price'], 2) ?></td>
+              
               <td class="qty">
+              <!-- Quantity update form -->
                 <form action="cart.php" method="post" style="display:inline;">
                   <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">
                   <button type="submit" name="change_qty" value="-1" class="qty-btn">−</button>
@@ -208,23 +223,30 @@ if (!empty($cart)) {
                 </form>
               </td>
               <td>₱<?= number_format($item['subtotal'], 2) ?></td>
+
               <td>
+               <!-- Remove item form -->
                 <form action="cart.php" method="post" style="display:inline;">
                   <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">
                   <button type="submit" name="remove_item">Remove</button>
                 </form>
               </td>
             </tr>
+
           <?php endforeach; ?>
         <?php endif; ?>
       </tbody>
     </table>
 
-    <div class="total">Total: ₱<?= number_format($total, 2) ?></div>
-    <?php if (!empty($itemDetails)): ?>
-      <button type="submit">Proceed to Payment</button>
-    <?php endif; ?>
-  </form>
+    <!-- Buttons container -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+      <button onclick="window.location.href='menu.php'" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem;">Back to Menu</button>
+      <?php if (!empty($itemDetails)): ?>
+        <form action="payment.php" method="post" style="margin: 0;">
+          <button type="submit" class="checkout-btn" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem;">Proceed to Payment</button>
+        </form>
+      <?php endif; ?>
+    </div>
 </div>
 
 </body>

@@ -30,5 +30,5 @@ if (!$found) {
     ];
 }
 
-header('Location: cart.php');
+header('Location: menu.php?added_to_cart=true');
 exit;

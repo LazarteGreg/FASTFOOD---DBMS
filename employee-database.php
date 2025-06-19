@@ -49,6 +49,24 @@ if (isset($_GET['delete'])) {
     }
 }
 
+// Handle Edit Employee
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_employee'])) {
+    $employee_id = $_POST['edit_employee_id'];
+    $first_name = $_POST['edit_first_name'];
+    $last_name = $_POST['edit_last_name'];
+    $contact_number = $_POST['edit_contact_number'];
+    $role = $_POST['edit_role'];
+    $shift_timing = $_POST['edit_shift_timing'];
+
+    try {
+        $stmt = $dbh->prepare("UPDATE employees SET first_name=?, last_name=?, contact_number=?, role=?, shift_timing=? WHERE employee_id=?");
+        $stmt->execute([$first_name, $last_name, $contact_number, $role, $shift_timing, $employee_id]);
+        $message = "Employee updated successfully.";
+    } catch (PDOException $e) {
+        $error = "Error updating employee: " . $e->getMessage();
+    }
+}
+
 // Fetch all employees
 $sql = "SELECT * FROM employees";
 $query = $dbh->prepare($sql);
@@ -156,6 +174,30 @@ $employees = $query->fetchAll(PDO::FETCH_ASSOC);
       background-color: #a04040;
     }
 
+    .edit-btn {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    .edit-btn:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-add {
+      background-color: #28a745;
+      color: white;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-add:hover {
+      background-color: #218838;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -175,16 +217,8 @@ $employees = $query->fetchAll(PDO::FETCH_ASSOC);
       background-color: #f3f3f3;
     }
 
-    .edit-btn {
-      background-color: #28a745;
-    }
-
     .delete-btn {
       background-color: #dc3545;
-    }
-
-    .edit-btn:hover {
-      background-color: #1e7e34;
     }
 
     .delete-btn:hover {
@@ -266,7 +300,7 @@ $employees = $query->fetchAll(PDO::FETCH_ASSOC);
     <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
     <div class="actions">
-      <button class="btn" onclick="document.getElementById('addModal').style.display='block'">Add Employee</button>
+      <button class="btn-add" onclick="document.getElementById('addModal').style.display='block'">Add Employee</button>
     </div>
 
     <table>
@@ -292,7 +326,7 @@ $employees = $query->fetchAll(PDO::FETCH_ASSOC);
               <td><?= htmlspecialchars($emp['role']) ?></td>
               <td><?= htmlspecialchars($emp['shift_timing']) ?></td>
               <td>
-                <!-- For now only delete button works -->
+                <button class="btn edit-btn" onclick="openEditModal('<?= $emp['employee_id'] ?>', '<?= htmlspecialchars($emp['first_name'], ENT_QUOTES) ?>', '<?= htmlspecialchars($emp['last_name'], ENT_QUOTES) ?>', '<?= htmlspecialchars($emp['contact_number'], ENT_QUOTES) ?>', '<?= htmlspecialchars($emp['role'], ENT_QUOTES) ?>', '<?= htmlspecialchars($emp['shift_timing'], ENT_QUOTES) ?>')">Edit</button>
                 <a href="employee-database.php?delete=<?= $emp['employee_id'] ?>" onclick="return confirm('Are you sure?')">
                   <button class="btn delete-btn">Delete</button>
                 </a>
@@ -348,11 +382,53 @@ $employees = $query->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 
+  <!-- Edit Employee Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
+      <h2>Edit Employee</h2>
+      <form method="POST">
+        <input type="hidden" name="edit_employee_id" id="edit_employee_id">
+        <div class="form-group">
+          <label for="edit_first_name">First Name</label>
+          <input type="text" name="edit_first_name" id="edit_first_name" required>
+        </div>
+        <div class="form-group">
+          <label for="edit_last_name">Last Name</label>
+          <input type="text" name="edit_last_name" id="edit_last_name" required>
+        </div>
+        <div class="form-group">
+          <label for="edit_contact_number">Contact Number</label>
+          <input type="text" name="edit_contact_number" id="edit_contact_number" required>
+        </div>
+        <div class="form-group">
+          <label for="edit_role">Role</label>
+          <input type="text" name="edit_role" id="edit_role" required>
+        </div>
+        <div class="form-group">
+          <label for="edit_shift_timing">Shift Timing</label>
+          <input type="text" name="edit_shift_timing" id="edit_shift_timing" required>
+        </div>
+        <button type="submit" name="edit_employee" class="btn edit-btn">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
   <script>
+    function openEditModal(id, first, last, contact, role, shift) {
+      document.getElementById('edit_employee_id').value = id;
+      document.getElementById('edit_first_name').value = first;
+      document.getElementById('edit_last_name').value = last;
+      document.getElementById('edit_contact_number').value = contact;
+      document.getElementById('edit_role').value = role;
+      document.getElementById('edit_shift_timing').value = shift;
+      document.getElementById('editModal').style.display = 'block';
+    }
+
     window.onclick = function(event) {
-      const modal = document.getElementById('addModal');
-      if (event.target === modal) {
-        modal.style.display = 'none';
+      var modal = document.getElementById('editModal');
+      if (event.target == modal) {
+        modal.style.display = "none";
       }
     }
   </script>

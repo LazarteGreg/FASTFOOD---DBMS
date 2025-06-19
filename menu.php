@@ -215,6 +215,11 @@ try {
 
 <!-- Main Content -->
 <div class="main-content">
+    <?php if (isset($_GET['added_to_cart'])): ?>
+    <div class="success-message" style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+        Item added to cart successfully! <a href="cart.php" style="color: var(--primary); text-decoration: underline;">View Cart</a>
+    </div>
+    <?php endif; ?>
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Browse Our Menu</h1>
     <button onclick="window.location.href='cart.php'" style="background: var(--primary); color: white; border: none; padding: 0.6rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">

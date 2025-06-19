@@ -212,20 +212,15 @@ $items = $query->fetchAll(PDO::FETCH_ASSOC);
           <?php if ($items): ?>
             <?php foreach ($items as $item): ?>
               <?php
-                // Determine status based on declared unit ranges
-                $qty = (int)$item['Quantity'];
-                if ($qty === OUT_OF_STOCK_THRESHOLD) {
-                    $status = 'Out of Stock';
-                    $statusClass = 'status-outstock';
-                } elseif ($qty >= LOW_STOCK_MIN && $qty <= LOW_STOCK_MAX) {
-                    $status = 'Low Stock';
-                    $statusClass = 'status-lowstock';
-                } elseif ($qty >= IN_STOCK_MIN) {
-                    $status = 'In Stock';
-                    $statusClass = 'status-instock';
+                $quantity = (int)$item['Quantity'];
+                if ($quantity == 0) {
+                    $stock_status = 'Out of Stock';
+                } elseif ($quantity < 25) {
+                    $stock_status = 'Low on Stock';
+                } elseif ($quantity >= 25) {
+                    $stock_status = 'In Stock';
                 } else {
-                    $status = 'Unknown';
-                    $statusClass = 'status-unknown';
+                    $stock_status = 'Unknown';
                 }
               ?>
               <tr>
@@ -234,7 +229,7 @@ $items = $query->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($item['Quantity']) ?></td>
                 <td><?= htmlspecialchars($item['Unit']) ?></td>
                 <td><?= htmlspecialchars($item['Category']) ?></td>
-                <td><span class="<?= $statusClass ?>"><?= $status ?></span></td>
+                <td><?= $stock_status ?></td>
                 <td><?= htmlspecialchars($item['Expiration_Date']) ?></td>
                 <td><?= htmlspecialchars($item['Last_Updated']) ?></td>
               </tr>
