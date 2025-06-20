@@ -45,3 +45,7 @@ process-payment.php called
 Payload: {"payment_method":"Cash on Delivery","discount":"SENIOR20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":317.6}
 process-payment.php called
 Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":14}],"total_amount":2086}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":248}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":248}

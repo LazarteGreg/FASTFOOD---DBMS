@@ -134,11 +134,16 @@ try {
     }
 
     .menu-card img {
-      width: 100%;
+      width: 160px;
       height: 140px;
-      object-fit: cover;
+      object-fit: contain;
+      background: #f8f8f8;
       border-radius: 8px;
       margin-bottom: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .menu-card h3 {
