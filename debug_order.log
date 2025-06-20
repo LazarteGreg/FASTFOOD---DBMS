@@ -29,3 +29,19 @@ Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemI
 Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'street' in 'field list'
 process-payment.php called
 Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":149}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":397}
+Exception: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`fastfood`.`order`, CONSTRAINT `fk_order_user` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":397}
+Exception: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`fastfood`.`order`, CONSTRAINT `fk_order_user` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":397}
+Exception: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`fastfood`.`order`, CONSTRAINT `fk_order_user` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"PWD20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":317.6}
+Exception: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`fastfood`.`order`, CONSTRAINT `fk_order_user` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"SENIOR20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":2}],"total_amount":317.6}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":14}],"total_amount":2086}

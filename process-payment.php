@@ -55,9 +55,10 @@ try {
     $stmt_receipt->execute([$payment_id, $receipt_date]);
 
     // Insert order items
-    $stmt_item = $dbh->prepare("INSERT INTO order_details (order_id, item_id, quantity) VALUES (?, ?, ?)");
+    $stmt_item = $dbh->prepare("INSERT INTO order_details (order_id, item_id, quantity, subtotal) VALUES (?, ?, ?, ?)");
     foreach ($data['items'] as $item) {
-        $stmt_item->execute([$order_id, $item['ItemID'], $item['ItemQuantity']]);
+        $subtotal = floatval($item['ItemPrice']) * intval($item['ItemQuantity']);
+        $stmt_item->execute([$order_id, $item['ItemID'], $item['ItemQuantity'], $subtotal]);
     }
 
     // Clear cart

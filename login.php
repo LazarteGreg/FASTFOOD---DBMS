@@ -23,17 +23,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if ($result->num_rows === 1) {
     $row = $result->fetch_assoc();
+    $db_password = $row['password'];
+    $user_id = $row['user_id'];
+    $role = $row['role'];
 
-    if (password_verify($pass, $row['password'])) {
-        $_SESSION['user_id'] = $row['user_id'];
+    if (password_verify($pass, $db_password)) {
+        // Password is hashed and correct
+        $_SESSION['user_id'] = $user_id;
         $_SESSION['username'] = $user;
-        $_SESSION['role'] = $row['role'];
-
-        if ($row['role'] === 'admin') {
+        $_SESSION['role'] = $role;
+        if ($role === 'admin') {
             header("Location: admin-dashboard.php");
-        } else if ($row['role'] === 'customer') {
+        } else if ($role === 'customer') {
             header("Location: customer-dashboard.php");
-        } else if ($row['role'] === 'employee') {
+        } else if ($role === 'employee') {
+            header("Location: employee-dashboard.php");
+        } else {
+            echo "<script>alert('Unknown role. Please contact support.');</script>";
+        }
+        exit();
+    } else if ($pass === $db_password) {
+        // Legacy: password is stored in plain text, upgrade to hash
+        $new_hash = password_hash($pass, PASSWORD_DEFAULT);
+        $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $update_stmt->bind_param("si", $new_hash, $user_id);
+        $update_stmt->execute();
+        $update_stmt->close();
+        // Log in the user
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['username'] = $user;
+        $_SESSION['role'] = $role;
+        if ($role === 'admin') {
+            header("Location: admin-dashboard.php");
+        } else if ($role === 'customer') {
+            header("Location: customer-dashboard.php");
+        } else if ($role === 'employee') {
             header("Location: employee-dashboard.php");
         } else {
             echo "<script>alert('Unknown role. Please contact support.');</script>";

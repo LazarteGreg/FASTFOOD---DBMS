@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch customer profile info using user_id
-$sql = "SELECT * FROM customer WHERE user_id = ?";
+// Fetch customer profile info
+$sql = "SELECT customer_id, first_name, last_name, email, phone_number, street, city, postal_code, birthdate, registration_date FROM customer WHERE user_id = ?";
 try {
     $stmt = $dbh->prepare($sql);
     $stmt->execute([$user_id]);

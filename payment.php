@@ -324,14 +324,14 @@ if (empty($itemDetails)) {
         receiptTable.innerHTML += row;
       });
 
-      let regularDiscount = baseTotal >= 500 ? baseTotal * 0.10 : 0;
+      let regularDiscount = 0; // baseTotal >= 500 ? baseTotal * 0.10 : 0;
       const discountType = document.querySelector('input[name="discount"]:checked')?.value || "NONE";
       let specialDiscount = 0;
       if (discountType === "PWD20" || discountType === "SENIOR20") {
-        specialDiscount = (baseTotal - regularDiscount) * 0.20;
+        specialDiscount = baseTotal * 0.20;
       }
 
-      const finalTotal = baseTotal - regularDiscount - specialDiscount;
+      const finalTotal = baseTotal - specialDiscount;
 
       let discountDetails = '';
       if (regularDiscount > 0) discountDetails += `<div>Regular Discount (10%): -${formatCurrency(regularDiscount)}</div>`;
