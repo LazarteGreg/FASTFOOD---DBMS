@@ -57,10 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'], $_POST['s
     $order_id = intval($_POST['order_id']);
     $status = $_POST['status'];
 
-    // Update order status in the `order` table
-    $update_sql = "UPDATE `order` SET order_status = ? WHERE order_id = ?";
+    // Update order status and set employee_id only if it is currently NULL
+    $employee_id = $_SESSION['user_id'];
+    $update_sql = "UPDATE `order` SET order_status = ?, employee_id = IF(employee_id IS NULL, ?, employee_id) WHERE order_id = ?";
     $update_stmt = $dbh->prepare($update_sql);
-    $success = $update_stmt->execute([$status, $order_id]);
+    $success = $update_stmt->execute([$status, $employee_id, $order_id]);
 
     header('Content-Type: application/json');
     echo json_encode(['success' => $success]);

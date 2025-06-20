@@ -13,6 +13,16 @@ if (!$order_id) {
     exit;
 }
 
+// Fetch the correct customer_id using user_id from session
+$customer_id = null;
+$stmt_cust = $dbh->prepare("SELECT customer_id FROM customer WHERE user_id = ?");
+$stmt_cust->execute([$_SESSION['user_id']]);
+$customer_id = $stmt_cust->fetchColumn();
+if (!$customer_id) {
+    echo "<h2>Customer profile not found.</h2>";
+    exit;
+}
+
 // Fetch order details with payment info and customer address
 $stmt = $dbh->prepare("
     SELECT o.*, p.payment_status, p.payment_method, p.discount, c.street, c.city, c.postal_code
@@ -21,7 +31,7 @@ $stmt = $dbh->prepare("
     LEFT JOIN customer c ON o.customer_id = c.customer_id
     WHERE o.order_id = ? AND o.customer_id = ?
 ");
-$stmt->execute([$order_id, $_SESSION['user_id']]);
+$stmt->execute([$order_id, $customer_id]);
 $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$order) {

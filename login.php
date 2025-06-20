@@ -24,29 +24,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if ($result->num_rows === 1) {
     $row = $result->fetch_assoc();
 
-    if ($pass === $row['password']) {
-    $_SESSION['user_id'] = $row['user_id'];
-    $_SESSION['username'] = $row['username'];
-    $_SESSION['role'] = $row['role']; 
+    if (password_verify($pass, $row['password'])) {
+        $_SESSION['user_id'] = $row['user_id'];
+        $_SESSION['username'] = $user;
+        $_SESSION['role'] = $row['role'];
 
-
-      if ($row['role'] === 'admin') {
-        header("Location: admin-dashboard.php");
-      } else if ($row['role'] === 'customer') {
-        header("Location: customer-dashboard.php");
-      } else if ($row['role'] === 'employee') {
-        header("Location: employee-dashboard.php");
-      } else {
-        echo "<script>alert('Unknown role. Please contact support.');</script>";
-      }
-
-      exit();
+        if ($row['role'] === 'admin') {
+            header("Location: admin-dashboard.php");
+        } else if ($row['role'] === 'customer') {
+            header("Location: customer-dashboard.php");
+        } else if ($row['role'] === 'employee') {
+            header("Location: employee-dashboard.php");
+        } else {
+            echo "<script>alert('Unknown role. Please contact support.');</script>";
+        }
+        exit();
     } else {
-      echo "<script>alert('Incorrect password.');</script>";
+        echo "<script>alert('Incorrect password.');</script>";
     }
-  } else {
+} else {
     echo "<script>alert('Username not found.');</script>";
-  }
+}
 
   $stmt->close();
 }

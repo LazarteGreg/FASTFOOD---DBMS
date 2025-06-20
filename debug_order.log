@@ -1,0 +1,31 @@
+DB: fastfood
+User ID: 4
+DB: fastfood
+User ID: 4
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":"1"},{"ItemID":8,"ItemName":"Apple Pie","ItemPrice":"49.00","ItemQuantity":"1"}],"total_amount":356}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":149}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":"1"},{"ItemID":8,"ItemName":"Apple Pie","ItemPrice":"49.00","ItemQuantity":"1"}],"total_amount":356}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"PWD20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":4}],"total_amount":387.2}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":248}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":"1"},{"ItemID":8,"ItemName":"Apple Pie","ItemPrice":"49.00","ItemQuantity":"1"}],"total_amount":356}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"SENIOR20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":"1"},{"ItemID":8,"ItemName":"Apple Pie","ItemPrice":"49.00","ItemQuantity":"1"}],"total_amount":284.8}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"SENIOR20","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"},{"ItemID":4,"ItemName":"Chicken Nuggets","ItemPrice":"89.00","ItemQuantity":"1"},{"ItemID":6,"ItemName":"Iced tea","ItemPrice":"45.00","ItemQuantity":2},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":"1"},{"ItemID":8,"ItemName":"Apple Pie","ItemPrice":"49.00","ItemQuantity":"1"}],"total_amount":385.2}
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":7},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":3}],"total_amount":1187.1}
+Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'street' in 'field list'
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":1,"ItemName":"Cheeseburger","ItemPrice":"99.00","ItemQuantity":"1"},{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":7},{"ItemID":7,"ItemName":"Sundae","ItemPrice":"59.00","ItemQuantity":3}],"total_amount":1187.1}
+Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'street' in 'field list'
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":149}
+Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'street' in 'field list'
+process-payment.php called
+Payload: {"payment_method":"Cash on Delivery","discount":"NONE","items":[{"ItemID":2,"ItemName":"Double Burger","ItemPrice":"149.00","ItemQuantity":"1"}],"total_amount":149}

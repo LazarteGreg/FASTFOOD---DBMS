@@ -254,7 +254,16 @@ if (empty($itemDetails)) {
         <div class="total" id="totalAmount">Total: ₱0.00</div>
       </div>
 
-      <button type="button" onclick="confirmPayment()">Confirm Payment</button>
+      <button id="confirmPaymentBtn" type="button" onclick="showConfirmDialog()">Confirm Payment</button>
+
+      <div id="confirmDialog" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; padding:2rem; border-radius:10px; text-align:center; max-width:300px; margin:auto;">
+          <h3>Confirm Payment</h3>
+          <p>Are you sure you want to proceed?</p>
+          <button onclick="doConfirmPayment()">Yes</button>
+          <button onclick="hideConfirmDialog()">No</button>
+        </div>
+      </div>
     </div>
 
     <div class="receipt-card hidden" id="receiptCard">
@@ -364,6 +373,17 @@ if (empty($itemDetails)) {
           alert("Payment failed. Please try again.");
         }
       });
+    }
+
+    function showConfirmDialog() {
+      document.getElementById('confirmDialog').style.display = 'flex';
+    }
+    function hideConfirmDialog() {
+      document.getElementById('confirmDialog').style.display = 'none';
+    }
+    function doConfirmPayment() {
+      hideConfirmDialog();
+      confirmPayment();
     }
 
     window.onload = loadOrderSummary;

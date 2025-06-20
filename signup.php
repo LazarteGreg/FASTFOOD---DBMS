@@ -6,6 +6,8 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
+$error = '';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
@@ -14,26 +16,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $username = $_POST['username'];
   $email = $_POST['email'];
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Secure password
+  $street = $_POST['street'] ?? '';
+  $city = $_POST['city'] ?? '';
+  $postal_code = $_POST['postal_code'] ?? '';
 
   $insertUser = mysqli_prepare($conn, "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, 'customer')");
   if (!$insertUser) {
-    die("Prepare failed for users: " . mysqli_error($conn));
+    $error = "Prepare failed for users: " . mysqli_error($conn);
+  } else {
+    mysqli_stmt_bind_param($insertUser, "sss", $username, $password, $email);
+    try {
+      if (!mysqli_stmt_execute($insertUser)) {
+        if (mysqli_errno($conn) == 1062) {
+          $error = "Email or username already exists.";
+        } else {
+          $error = "Error: " . mysqli_error($conn);
+        }
+      } else {
+        $user_id = mysqli_insert_id($conn);
+        $insertCustomer = mysqli_prepare($conn, "INSERT INTO customer (user_id, first_name, last_name, phone_number, birthdate, email, street, city, postal_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        if (!$insertCustomer) {
+          $error = "Prepare failed for customers: " . mysqli_error($conn);
+        } else {
+          mysqli_stmt_bind_param($insertCustomer, "issssssss", $user_id, $first_name, $last_name, $phone_number, $birthdate, $email, $street, $city, $postal_code);
+          if (!mysqli_stmt_execute($insertCustomer)) {
+            if (mysqli_errno($conn) == 1062) {
+              $error = "Email already exists in customer table.";
+            } else {
+              $error = "Error: " . mysqli_error($conn);
+            }
+          } else {
+            // Success: user_id is now always linked to customer
+            header("Location: login.php?signup=success");
+            exit();
+          }
+        }
+      }
+    } catch (mysqli_sql_exception $e) {
+      if ($e->getCode() == 1062) {
+        $error = "Email or username already exists.";
+      } else {
+        $error = "Error: " . $e->getMessage();
+      }
+    }
   }
-  mysqli_stmt_bind_param($insertUser, "sss", $username, $password, $email);
-  mysqli_stmt_execute($insertUser);
-
-  $user_id = mysqli_insert_id($conn);
-
-
-  $insertCustomer = mysqli_prepare($conn, "INSERT INTO customer (user_id, first_name, last_name, phone_number, birthdate, email) VALUES (?, ?, ?, ?, ?, ?)");
-  if (!$insertCustomer) {
-    die("Prepare failed for customers: " . mysqli_error($conn));
-  }
-  mysqli_stmt_bind_param($insertCustomer, "isssss", $user_id, $first_name, $last_name, $phone_number, $birthdate, $email);
-  mysqli_stmt_execute($insertCustomer);
-
-  header("Location: login.php?signup=success");
-  exit();
 }
 ?>
 
@@ -121,6 +147,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     .signup-link a:hover {
       text-decoration: underline;
     }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -162,6 +195,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <label for="new-password">Password</label>
         <input type="password" name="password" id="new-password" required />
       </div>
+
+      <div class="input-group">
+        <label for="street">Street</label>
+        <input type="text" name="street" id="street" required />
+      </div>
+
+      <div class="input-group">
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" required />
+      </div>
+
+      <div class="input-group">
+        <label for="postal_code">Postal Code</label>
+        <input type="text" name="postal_code" id="postal_code" required />
+      </div>
+
+      <?php if ($error): ?>
+        <div class="error-message"><?php echo $error; ?></div>
+      <?php endif; ?>
 
       <button type="submit">Sign Up</button>
       <p class="signup-link">Already have an account? <a href="login.php">Login</a></p>
